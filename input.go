@@ -76,3 +76,4 @@ func init() {
 		return new(RedisListInput)
 	})
 }
+
