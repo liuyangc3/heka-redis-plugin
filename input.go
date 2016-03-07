@@ -2,7 +2,7 @@ package heka_redis_input
 
 import (
     "fmt"
-	"time"
+    "time"
 	"github.com/garyburd/redigo/redis"
 	"github.com/mozilla-services/heka/pipeline"
 )
