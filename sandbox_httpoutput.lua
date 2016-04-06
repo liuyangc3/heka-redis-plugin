@@ -4,7 +4,7 @@ hekad.toml
 [HttpOutput]
 message_matcher = "TRUE"
 type = "SandboxOutput"
-filename = "nxin/log4j_output.lua"
+filename = "sandbox_httpoutput.lua"
     [Log4jOutput.config]
     url = "http://some url"
     method = "POST"
