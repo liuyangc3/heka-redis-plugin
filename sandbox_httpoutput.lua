@@ -6,7 +6,7 @@ message_matcher = "TRUE"
 type = "SandboxOutput"
 filename = "nxin/log4j_output.lua"
     [Log4jOutput.config]
-    url = "http://mc.nxin.com/message/sendsmsCommonNxin?message="
+    url = "http://some url"
     method = "POST"
     req_body = "foo=bar"
     outfile = "log.txt"
