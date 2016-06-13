@@ -1,8 +1,9 @@
 [RedisListInput]
 address = "localhost:6379"
-key = "heka"  # reids list key
+key = "heka"
 db = 0
 
 [RedisListOutput]
 address = "localhost:6379"
 key = "heka"
+db = 0

@@ -1,4 +1,4 @@
-package heka_redis_input
+package input
 
 import (
 	"fmt"

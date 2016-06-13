@@ -1,4 +1,4 @@
-package heka_redis_output
+package output
 
 import (
 	"fmt"
@@ -9,6 +9,7 @@ import (
 type RedisOutputConfig struct {
 	Address  string `toml:"address"`
 	ListName string `toml:"key"`
+	Database int `toml:"db"`
 }
 
 type RedisListOutput struct {
@@ -17,16 +18,16 @@ type RedisListOutput struct {
 }
 
 func (rlo *RedisListOutput) ConfigStruct() interface{} {
-	return &RedisOutputConfig{"localhost:6379", "heka"}
+	return &RedisOutputConfig{"localhost:6379", "heka", 0}
 }
 
 func (rlo *RedisListOutput) Init(config interface{}) error {
 	rlo.conf = config.(*RedisOutputConfig)
 	var err error
-	rlo.conn, err = redis.Dial("tcp", rlo.conf.Address)
-	if err != nil {
+	if rlo.conn, err = redis.Dial("tcp", rlo.conf.Address); !err {
 		return fmt.Errorf("connecting to - %s", err.Error())
 	}
+	rlo.conn.Do("SELECT", rlo.conf.Database)
 	return nil
 }
 
