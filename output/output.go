@@ -24,7 +24,8 @@ func (rlo *RedisListOutput) ConfigStruct() interface{} {
 func (rlo *RedisListOutput) Init(config interface{}) error {
 	rlo.conf = config.(*RedisOutputConfig)
 	var err error
-	if rlo.conn, err = redis.Dial("tcp", rlo.conf.Address); !err {
+	rlo.conn, err = redis.Dial("tcp", rlo.conf.Address)
+	if err != nil {
 		return fmt.Errorf("connecting to - %s", err.Error())
 	}
 	rlo.conn.Do("SELECT", rlo.conf.Database)

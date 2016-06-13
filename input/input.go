@@ -25,7 +25,8 @@ func (rli *RedisListInput) ConfigStruct() interface{} {
 func (rli *RedisListInput) Init(config interface{}) error {
 	rli.conf = config.(*RedisListInputConfig)
 	var err error
-	if rli.conn, err = redis.Dial("tcp", rli.conf.Address); !err {
+	rli.conn, err = redis.Dial("tcp", rli.conf.Address)
+	if err != nil {
 		return fmt.Errorf("connecting to - %s", err.Error())
 	}
 	rli.conn.Do("SELECT", rli.conf.Database)
