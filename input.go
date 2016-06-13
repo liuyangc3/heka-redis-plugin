@@ -1,8 +1,8 @@
 package heka_redis_input
 
 import (
-    "fmt"
-    "time"
+	"fmt"
+	"time"
 	"github.com/garyburd/redigo/redis"
 	"github.com/mozilla-services/heka/pipeline"
 )
@@ -10,6 +10,7 @@ import (
 type RedisListInputConfig struct {
 	Address  string `toml:"address"`
 	ListName string `toml:"key"`
+	Database int `toml:"db"`
 }
 
 type RedisListInput struct {
@@ -18,16 +19,16 @@ type RedisListInput struct {
 }
 
 func (rli *RedisListInput) ConfigStruct() interface{} {
-	return &RedisListInputConfig{"localhost:6379", "heka"}
+	return &RedisListInputConfig{"localhost:6379", "heka", 0}
 }
 
 func (rli *RedisListInput) Init(config interface{}) error {
 	rli.conf = config.(*RedisListInputConfig)
 	var err error
-	rli.conn, err = redis.Dial("tcp", rli.conf.Address)
-	if err != nil {
+	if rli.conn, err = redis.Dial("tcp", rli.conf.Address); !err {
 		return fmt.Errorf("connecting to - %s", err.Error())
 	}
+	rli.conn.Do("SELECT", rli.conf.Database)
 	return nil
 }
 
@@ -44,7 +45,7 @@ func (rli *RedisListInput) Run(ir pipeline.InputRunner, h pipeline.PluginHelper)
 		message, err := rli.conn.Do("RPOP", rli.conf.ListName)
 		if err != nil {
 			ir.LogError(fmt.Errorf("Redis RPOP error: %s", err))
-			// TODO: should reconnect redis rather than colse it
+			// TODO: should reconnect redis rather than close it
 			rli.Stop()
 			break
 		}
@@ -76,4 +77,3 @@ func init() {
 		return new(RedisListInput)
 	})
 }
-
